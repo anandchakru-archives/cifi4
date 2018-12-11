@@ -90,6 +90,8 @@ spring:
     file: ${spring.application.name}.pid
 ```
 
+ - Feedback, comments - [@anandchakru](https://twitter.com/anandchakru)
+
 ## Tasks
 - [x] Lean app to manage automatic deploys from github release (eg: [rason](https://github.com/anandchakru/rason) after [travis](https://travis-ci.org/anandchakru/rason) does its *magic*.
 - [x] Support private repo.
