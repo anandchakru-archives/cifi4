@@ -1,0 +1,38 @@
+# The following will halt after build (and NOT release) unless a git tag is created.
+# If you want to make a release (on any branch), do the following
+# git add . && git commit -m "commit message"
+# ./gtag.sh
+
+# Value for $GITHUB_OAUTH_TOKEN is generated from https://github.com/settings/tokens
+# and added to travis https://travis-ci.org/anandchakru/cifi4/settings
+
+jobs:
+  include:
+    if: tag IS present
+language: java
+install: 
+- mvn dependency:resolve
+script:
+- mvn package -Dcifi4.version=${TRAVIS_TAG} -Dmaven.javadoc.skip=true -B -V
+cache:
+  directories:
+    - $HOME/.m2
+branches:
+  except:
+  - test
+  - master
+notifications:
+  email:
+    on_failure: change
+    on_success: change
+deploy:
+  - provider: releases
+    api_key: $GITHUB_OAUTH_TOKEN
+    file_glob: true
+    file: 
+      - $TRAVIS_BUILD_DIR/target/cifi4-${TRAVIS_TAG}.jar
+    on:
+      repo: anandchakru/cifi4
+      branch: master
+      tags: true
+    skip_cleanup: true

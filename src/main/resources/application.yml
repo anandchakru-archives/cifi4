@@ -1,0 +1,57 @@
+# TRACE|DEBUG|INFO|WARN|ERROR
+logging:
+  level:
+    org.springframework: WARN
+    com.anandchakru.app: WARN
+    org.hibernate: WARN
+    root: WARN
+  file: cifi4.log
+spring: 
+  application: 
+    name: cifi4
+  main: 
+    banner-mode: "off"
+  jackson:
+    serialization:
+      fail-on-empty-beans: false
+    default-property-inclusion: NON_NULL
+server:
+  port: ${port:8089}
+cifi: 
+  stageDir: /apps/
+  opsOauthToken:
+  apps:
+    rason:
+      githubWebhookSecret: get_yours_from_https://github.com/<user>/<repo>/settings/hooks/<hookid>
+      allowedAssetUrlPrefixes: https://github.com/anandchakru/rason/releases/download
+      startUpCommand:
+        - java
+        - -jar
+        - -Dspring.profiles.active=prod
+        - -Dlogback-debug=true
+        - -Dserver.port=9090
+        - ASSET
+      shutDownCommand:
+        - fuser
+        - -n
+        - tcp
+        - -k
+        - 9090
+    private_app:
+      githubOauthToken: get_yours_from_https://github.com/settings/tokens
+      githubWebhookSecret: get_yours_from_https://github.com/<user>/<repo>/settings/hooks/<hookid>
+      allowedAssetUrlPrefixes: https://github.com/anandchakru/private_app/releases/download
+      startUpCommand:
+        - java
+        - -jar
+        - -Dspring.profiles.active=prod
+        - -Dlogback-debug=true
+        - -Dserver.port=8080
+        - ASSET
+      shutDownCommand:
+        - fuser
+        - -n
+        - tcp
+        - -k
+        - 8080
+        

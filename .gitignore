@@ -1,0 +1,33 @@
+# See http://help.github.com/ignore-files/ for more about ignoring files.
+
+# compiled output
+/dist
+/tmp
+/out-tsc
+/memory
+
+# dependencies
+/node_modules
+node_modules/
+
+# IDEs and editors
+target/
+trx/
+tmp/
+bin/
+/.idea
+.project
+.classpath
+.c9/
+*.launch
+.settings/
+*.sublime-workspace
+*.log
+*.tmp
+*.pid
+*.log*.gz
+
+
+# System Files
+.DS_Store
+Thumbs.db
