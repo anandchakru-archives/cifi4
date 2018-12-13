@@ -4,8 +4,9 @@
 Cifi helps you deploy automation from github releases.
 
 ## Setup
+Here is how you'd use cifi4 to automate deployment of the target application, [rason](https://github.com/anandchakru/rason) on your server.
 
-Create a user (eg: *ucifi*) 
+- Create a user (eg: *ucifi*) 
 
 ```sh
 sudo adduser ucifi
@@ -27,14 +28,14 @@ Enter the new value, or press ENTEr for the default
 Is the information correct? [Y/n]
 ```
 
-Make desired directory (eg: */apps*) with appropriate permissions
+- Make desired directory (eg: */apps*) with appropriate permissions
 
 ```sh
 sudo mkdir -p /apps/cifi
 chown -R ucifi:ucifi /apps
 ```
 
-Login as ucifi
+- Login as ucifi
 
 ```sh
 su ucifi
@@ -42,29 +43,31 @@ Password:
 cd /apps/cifi/
 ```
 
-Download [latest](https://github.com/anandchakru/cifi/releases/latest) cifi
+- Download [latest](https://github.com/anandchakru/cifi/releases/latest) cifi
 
 ```sh
 curl -o /app/cifi/cifi.jar -H 'Accept: application/octet-stream' -JL $(curl -s https://api.github.com/repos/anandchakru/rason/releases/latest | grep '"browser_download_url":' | sed -E 's/.*"([^"]+)".*/\1/')
 ```
 
-Add desired settings in application.yml (this will override whatever is in src/main/resources/application.yml)
+- Add desired settings in application.yml (this will override whatever is in src/main/resources/application.yml)
 
 ```sh
 touch /app/cifi/application.yml
 ```
 
-Make directory for target (eg: rason)
+- Make directory for target application (eg: [rason](https://github.com/anandchakru/rason))
 
 ```sh
 mkdir -p /apps/rason
 ```
 
-Start cifi in a sub shell with current directory set to /apps/rason/ (,. or whichever dir you prefer)
+- Start cifi in a sub shell with current directory set to /apps/rason/ (,. or whichever dir you prefer)
 
 ```sh
 (cd /apps/rason/ && nohup java -jar /apps/cifi/cifi4-1.0.1.jar &)
 ```
+
+- Now cifi listens to github releases events, and if there is a new release, cifi deployes and restarts the server for you.
 
 ## Few other things:
 
@@ -96,5 +99,5 @@ spring:
 - [x] Lean app to manage automatic deploys from github release (eg: [rason](https://github.com/anandchakru/rason) after [travis](https://travis-ci.org/anandchakru/rason) does its *magic*.
 - [x] Support private repo.
 - [ ] Support for ui app.
-- [ ] cifi4-master to manage multi-cifi nodes & multi-cluster deployment.
+- [ ] cifi-master to manage multi-cifi nodes & multi-cluster deployment.
 - [ ] Support for windows based environment.
