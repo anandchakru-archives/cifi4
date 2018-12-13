@@ -3,6 +3,22 @@
 
 Cifi helps you deploy automation from github releases.
 
+ - With all the below setup, here is how it will work out. 
+   - I commit the code to local repo
+   - If I need it published, I execute [gtag](https://github.com/anandchakru/rason/blob/master/gtag.sh).
+     - Bumps the current version and creates a tag
+     - Pushes the commits and tags to github. 
+   - Travis, [config](https://github.com/anandchakru/rason/blob/master/.travis.yml) 
+     - Build all tagged versions
+     - Push it to github releases. 
+   - Github 
+     - Receives release artifact
+     - Invokes the webhook. 
+   - cifi 
+     - Downloads the artifact
+     - Shutdown the current application
+     - Restart with the new version. 
+
 ## Setup
 Here is how you'd use cifi to automate deployment of the target application, [rason](https://github.com/anandchakru/rason) on your server.
 
@@ -111,7 +127,6 @@ spring:
     fail-on-write-error: true
     file: ${spring.application.name}.pid
 ```
- - With all the above setup, here is how it working out. Once I commit the code to local repo, if I need it published, I execute [gtag](https://github.com/anandchakru/rason/blob/master/gtag.sh), which which bumps the current version and creates a tag, pushes the commits and tags to github. Travis, [config](https://github.com/anandchakru/rason/blob/master/.travis.yml) is setup to build all tagged versions and push it to github releases. Github invokes the webhook once it receives a new version in releases. cifi kicks in by the webhook and is configured to download, shutdown, and restart with the new version. 
  
  There goes my own little *continuous integration and continuous delivery*!
  
