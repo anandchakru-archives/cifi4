@@ -4,7 +4,7 @@
 Cifi helps you deploy automation from github releases.
 
 ## Setup
-Here is how you'd use cifi4 to automate deployment of the target application, [rason](https://github.com/anandchakru/rason) on your server.
+Here is how you'd use cifi to automate deployment of the target application, [rason](https://github.com/anandchakru/rason) on your server.
 
 - Create a user (eg: *ucifi*) 
 
@@ -70,10 +70,29 @@ mkdir -p /apps/rason
 - Now cifi listens to github releases events, and if there is a new release, cifi deployes and restarts the server for you.
 
 ## Few other things:
+ - Sample nginx config to listen on github's webhook. On https://github.com/anandchakru/rason/settings/hooks/ this is what we have `https://ops.jrvite.com/wh/gh/rason`
+```sh
+server {
+        server_name ops.jrvite.com;
+	listen 443 ssl;
+        location = /wh/gh {
+                proxy_pass https://localhost:8089;
+                proxy_set_header X-Real-IP $remote_addr;
+                proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+                proxy_set_header X-NginX-Proxy true;
+                proxy_ssl_session_reuse off;
+                proxy_set_header Host $http_host;
+                proxy_cache_bypass $http_upgrade;
+                proxy_redirect off;
+        }
+}
+```
+**Note:** ssl config is off topic, to quickly test, you mat remove `listen 443 ssl;` and setup http url in github webhooks.
 
  - Sample app - [rason](https://github.com/anandchakru/rason), managed by cifi is live [here](https://rason.jrvite.com/index).
 
- - Use ApplicationPidFileWriter to capture the pid after application starts.
+ - Recommend using ApplicationPidFileWriter to capture the pid after application starts.
+ 
 ```java
 @Import({ RasonConfig.class })
 @SpringBootApplication
@@ -92,7 +111,10 @@ spring:
     fail-on-write-error: true
     file: ${spring.application.name}.pid
 ```
-
+ - With all the above setup, here is how it working out. Once I commit the code to local repo, if I need it published, I execute [gtag](https://github.com/anandchakru/rason/blob/master/gtag.sh), which which bumps the current version and creates a tag, pushes the commits and tags to github. Travis, [config](https://github.com/anandchakru/rason/blob/master/.travis.yml) is setup to build all tagged versions and push it to github releases. Github invokes the webhook once it receives a new version in releases. cifi kicks in by the webhook and is configured to download, shutdown, and restart with the new version. 
+ 
+ There goes my own little *continuous integration and continuous delivery*!
+ 
  - Feedback, comments - [@anandchakru](https://twitter.com/anandchakru)
 
 ## Tasks
