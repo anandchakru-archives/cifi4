@@ -1,6 +1,8 @@
 
 # Cifi
 
+[![Build Status](https://travis-ci.org/anandchakru/cifi4.svg?branch=master)](https://travis-ci.org/anandchakru/cifi4)
+
 Cifi helps you deploy automation from github releases.
 
  - With all the below setup, here is how it will work out. 
